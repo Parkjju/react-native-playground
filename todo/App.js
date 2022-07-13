@@ -6,40 +6,60 @@ import {
     Text,
     View,
     TouchableOpacity,
-    TouchableHighlight,
+    TextInput,
 } from 'react-native';
 import { theme } from './colors';
 
 export default function App() {
-    const [clicked, setClicked] = useState(false);
-    const onClick = () => {
-        console.log('Hello');
+    const [working, setWorking] = useState(false);
+    const [text, setText] = useState('');
+
+    const work = () => {
+        setWorking(true);
     };
+
+    const travel = () => {
+        setWorking(false);
+    };
+
+    const onChangeText = (payload) => {
+        setText(payload);
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar style='auto' />
             <View style={styles.header}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={work}>
                     <Text
                         style={{
                             ...styles.btnText,
-                            color: clicked ? 'white' : theme.grey,
+                            color: working ? 'white' : theme.grey,
                         }}
                     >
                         Work
                     </Text>
                 </TouchableOpacity>
-                <TouchableHighlight onPress={onClick}>
+                <TouchableOpacity onPress={travel}>
                     <Text
                         style={{
                             ...styles.btnText,
-                            color: clicked ? theme.grey : 'white',
+                            color: !working ? 'white' : theme.grey,
                         }}
                     >
                         Travel
                     </Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
+
+            <TextInput
+                placeholder={
+                    working ? 'Add a To do' : 'Where do you want to go?'
+                }
+                onChangeText={onChangeText}
+                value={text}
+                style={styles.input}
+            />
         </View>
     );
 }
@@ -48,21 +68,25 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
+        paddingHorizontal: 20,
     },
     header: {
-        width: Dimensions.get('window').width,
         height: 100,
         backgroundColor: 'black',
         marginTop: 100,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingLeft: 12,
-        paddingRight: 12,
     },
     btnText: {
-        color: 'white',
         fontSize: 38,
         fontWeight: '600',
+    },
+    input: {
+        backgroundColor: 'white',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        marginTop: 20,
+        fontSize: 18,
     },
 });
