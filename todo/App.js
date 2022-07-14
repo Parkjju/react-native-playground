@@ -7,12 +7,14 @@ import {
     View,
     TouchableOpacity,
     TextInput,
+    ScrollView,
 } from 'react-native';
 import { theme } from './colors';
 
 export default function App() {
     const [working, setWorking] = useState(false);
     const [text, setText] = useState('');
+    const [toDos, setToDos] = useState({});
 
     const work = () => {
         setWorking(true);
@@ -24,6 +26,18 @@ export default function App() {
 
     const onChangeText = (payload) => {
         setText(payload);
+    };
+    const addTodo = () => {
+        if (text === '') {
+            return;
+        }
+
+        const newToDos = Object.assign({}, toDos, {
+            [Date.now()]: { text, work: working },
+        });
+
+        setToDos(newToDos);
+        setText('');
     };
 
     return (
@@ -53,13 +67,22 @@ export default function App() {
             </View>
 
             <TextInput
+                onSubmitEditing={addTodo}
                 placeholder={
                     working ? 'Add a To do' : 'Where do you want to go?'
                 }
                 onChangeText={onChangeText}
                 value={text}
                 style={styles.input}
+                returnKeyType='done'
             />
+            <ScrollView>
+                {Object.keys(toDos).map((item, index) => (
+                    <View style={styles.todo} key={index}>
+                        <Text style={styles.todoText}>{toDos[item].text}</Text>
+                    </View>
+                ))}
+            </ScrollView>
         </View>
     );
 }
@@ -86,7 +109,19 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
         borderRadius: 30,
-        marginTop: 20,
+        marginVertical: 20,
         fontSize: 18,
+    },
+    todo: {
+        backgroundColor: 'grey',
+        marginBottom: 10,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderRadius: 15,
+    },
+    todoText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '500',
     },
 });
